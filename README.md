@@ -13,15 +13,6 @@ Este repositorio contiene el código desarrollado para la parte práctica del TF
 
 ---
 
-## Estructura del Repositorio
-
-├── notebooks/
-│   ├── 01_exploracion_analisis_calidad.ipynb
-│   ├── 02_limpieza_transformacion_etl.ipynb
-└── README.md
-
----
-
 ## Dataset
 
 El dataset utilizado es el *Online Advertising Digital Marketing Data*, disponible públicamente en Kaggle:  
@@ -51,7 +42,7 @@ Limpieza del dataset, construcción de la columna de fecha, cálculo de métrica
 
 Los dashboards interactivos desarrollados están disponibles en los siguientes enlaces:
 
-- **Looker Studio:** https://lookerstudio.google.com/reporting 15ebed93-556a-48ab-9f1c-10c25111f182 
+- **Looker Studio:** https://lookerstudio.google.com/reporting15ebed93-556a-48ab-9f1c-10c25111f182 
 - **Power BI:** https://drive.google.com/file/d/1qykUm2SAPtDHj_5-WXIVU4b49nVDvdJQ/view?usp=sharing
 
 ---
