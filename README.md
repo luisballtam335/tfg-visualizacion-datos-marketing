@@ -24,17 +24,30 @@ https://www.kaggle.com/datasets/naniruddhan/online-advertising-digital-marketing
 
 Para ejecutar los notebooks es necesario tener instaladas las siguientes librerías de Python:
 
-pip install pandas numpy matplotlib seaborn gspread google-auth
+pip install pandas numpy matplotlib seaborn gspread google-auth google-auth-oauthlib schedule
 
 ---
 
-## Contenido de los notebooks
+## Contenido de los archivos de código
 
-**01_exploracion_analisis_calidad.ipynb**  
+**exploracion_analisis_calidad.ipynb**  
 Exploración inicial del dataset: estructura, tipos de datos, estadísticas descriptivas, análisis de valores nulos, duplicados y outliers, y análisis de variación entre grupos.
 
-**02_limpieza_transformacion_etl.ipynb**  
+**trasnformacion_etl_automatizacion_periodica_tfg.py**  
 Limpieza del dataset, construcción de la columna de fecha, cálculo de métricas derivadas (CTR, CPC, CPM, Conv_Rate, Revenue_per_Conv, ROAS) y automatización del pipeline ETL con carga automática en Google Sheets mediante la API de Google.
+
+**ejecutor_periodico.py**  
+Scheduler de ejecución automática del pipeline ETL. Ejecuta `etl_pipeline.py` cada 15 minutos de forma automática mientras esté en ejecución, sincronizándose con el intervalo mínimo de actualización de Looker Studio desde Google Sheets.
+
+---
+
+## Ejecución automática del pipeline
+
+Para lanzar el pipeline ETL de forma automática cada 15 minutos, ejecuta el siguiente comando y mantén la ventana abierta:
+
+python ejecutor_periodico.py
+
+La primera ejecución abrirá el navegador para autorizar el acceso a Google Sheets mediante OAuth. Las siguientes ejecuciones serán completamente automáticas.
 
 ---
 

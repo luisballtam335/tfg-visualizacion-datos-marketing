@@ -109,7 +109,7 @@ print(f'Shape final: {df.shape}')
 print(f'Nulos restantes: {df.isnull().sum().sum()}')
 
 #Configuración
-NOMBRE_HOJA = 'prueba_etl_vs'
+NOMBRE_HOJA = 'online_advertising_clean3'
 
 #Abrir la hoja de Google Sheets
 spreadsheet = gc.open(NOMBRE_HOJA)
