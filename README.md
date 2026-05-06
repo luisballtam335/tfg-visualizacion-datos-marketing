@@ -24,7 +24,7 @@ https://www.kaggle.com/datasets/naniruddhan/online-advertising-digital-marketing
 
 Para ejecutar los notebooks es necesario tener instaladas las siguientes librerías de Python:
 
-pip install pandas numpy matplotlib seaborn gspread google-auth google-auth-oauthlib schedule
+`pip install pandas numpy matplotlib seaborn gspread google-auth google-auth-oauthlib schedule`
 
 ---
 
@@ -45,7 +45,7 @@ Scheduler de ejecución automática del pipeline ETL. Ejecuta `etl_pipeline.py` 
 
 Para lanzar el pipeline ETL de forma automática cada 15 minutos, ejecuta el siguiente comando y mantén la ventana abierta:
 
-python ejecutor_periodico.py
+`python ejecutor_periodico.py`
 
 La primera ejecución abrirá el navegador para autorizar el acceso a Google Sheets mediante OAuth. Las siguientes ejecuciones serán completamente automáticas.
 
