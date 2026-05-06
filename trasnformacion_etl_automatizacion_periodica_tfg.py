@@ -1,27 +1,49 @@
 import pandas as pd
 import numpy as np
 import gspread
-from google.oauth2.service_account import Credentials
-from datetime import datetime
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
 import os
+import pickle
+from datetime import datetime
 
-print('Librerías cargadas correctamente')
-
-#Autenticación con cuenta de servicio de Google
-CREDENTIALS_FILE = os.path.join(os.path.dirname(__file__), 'credentials.json')
-
-scope = [
-    'https://spreadsheets.google.com/feeds',
+#Scopes necesarios
+SCOPES = [
+    'https://www.googleapis.com/auth/spreadsheets',
     'https://www.googleapis.com/auth/drive'
 ]
 
-creds = Credentials.from_service_account_file(CREDENTIALS_FILE, scopes=scope)
-gc = gspread.authorize(creds)
+#Autenticación OAuth
+def autenticar():
+    creds = None
+    token_path = os.path.join(os.path.dirname(__file__), 'token.pickle')
+    secrets_path = os.path.join(os.path.dirname(__file__), 'client_secrets.json')
 
+    #Si ya existe un token guardado lo usamos
+    if os.path.exists(token_path):
+        with open(token_path, 'rb') as token:
+            creds = pickle.load(token)
+
+    #Si no hay token válido, solicitamos autorización
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(secrets_path, SCOPES)
+            creds = flow.run_local_server(port=0)
+        #Guardamos el token para futuras ejecuciones
+        with open(token_path, 'wb') as token:
+            pickle.dump(creds, token)
+
+    return gspread.authorize(creds)
+
+gc = autenticar()
 print('Autenticación completada')
 
 #Carga del CSV original
-CSV_PATH = os.path.join(os.path.dirname(__file__), 'online_advertising_performance_data.csv')
+CSV_PATH = os.path.join(os.path.dirname(__file__), 
+           'online_advertising_performance_data.csv')
 df_raw = pd.read_csv(CSV_PATH)
 
 print(f'Extracción completada')
@@ -79,7 +101,7 @@ df['ROAS'] = np.where(df['cost'] > 0,
     (df['revenue'] / df['cost']).round(4), 0)
 print(f'Métricas derivadas calculadas')
 
-#Añadir timestamp de última actualización
+#Añadir timestamp
 df['last_updated'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 print(f'\nTransformación completada')
@@ -87,28 +109,22 @@ print(f'Shape final: {df.shape}')
 print(f'Nulos restantes: {df.isnull().sum().sum()}')
 
 #Configuración
-NOMBRE_HOJA = 'online_advertising_clean3'
+NOMBRE_HOJA = 'prueba_etl_vs'
 
 #Abrir la hoja de Google Sheets
 spreadsheet = gc.open(NOMBRE_HOJA)
 worksheet = spreadsheet.sheet1
 
 print(f'Hoja conectada: {NOMBRE_HOJA}')
-print(f'Filas actuales en la hoja: {len(worksheet.get_all_values())}')
 
 #Separar columnas numéricas y no numéricas
-cols_numericas = df.select_dtypes(include=[np.number]).columns.tolist()
 cols_texto = df.select_dtypes(exclude=[np.number]).columns.tolist()
-
-#Convertir solo las columnas de texto a string
 df_export = df.copy()
 for col in cols_texto:
     df_export[col] = df_export[col].astype(str)
 
-#Construir la lista de datos
+#Construir lista de datos y cargar
 data = [df_export.columns.tolist()] + df_export.values.tolist()
-
-#Limpiar y cargar
 worksheet.clear()
 worksheet.update(data, value_input_option='USER_ENTERED')
 
@@ -119,11 +135,11 @@ print(f'Filas cargadas: {len(df_export):,}')
 filas_en_sheets = len(worksheet.get_all_values()) - 1
 filas_en_df = len(df)
 
-print('VERIFICACIÓN POST-CARGA')
+print('·VERIFICACIÓN POST-CARGA')
 print(f'Filas en el dataframe:   {filas_en_df:,}')
 print(f'Filas en Google Sheets:  {filas_en_sheets:,}')
 
 if filas_en_sheets == filas_en_df:
-    print('Carga verificada correctamente — los datos coinciden ✓')
+    print('Carga verificada correctamente: los datos coinciden')
 else:
-    print('Error — el número de filas no coincide ✗')
+    print('Error: el número de filas no coincide')
