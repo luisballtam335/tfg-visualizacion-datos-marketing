@@ -56,7 +56,9 @@ La primera ejecución abrirá el navegador para autorizar el acceso a Google She
 Los dashboards interactivos desarrollados están disponibles en los siguientes enlaces:
 
 - **Looker Studio:** https://lookerstudio.google.com/reporting15ebed93-556a-48ab-9f1c-10c25111f182 
-- **Power BI:** https://drive.google.com/file/d/1qykUm2SAPtDHj_5-WXIVU4b49nVDvdJQ/view?usp=sharing
+- **Power BI:** el archivo `.pbix` está disponible en el repositorio
+
+Para visualizar el archivo de Power BI es necesario tener instalado Power BI Desktop, disponible de forma gratuita en https://powerbi.microsoft.com/es-es/desktop/
 
 ---
 
