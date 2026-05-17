@@ -25,8 +25,8 @@ def ejecutar_pipeline():
 #Para programar ejecución diaria 
 #schedule.every().day.at("11:55").do(ejecutar_pipeline)
 
-#Para poder programarlo cada 15 minutos y que esté en paralelo con la actualización mínima de Looker:
-schedule.every(15).minutes.do(ejecutar_pipeline)
+#Para poder programarlo cada 7 minutos y que esté en paralelo con la actualización mínima de Looker:
+schedule.every(7).minutes.do(ejecutar_pipeline)
 
 print(f"Ejecutor iniciado.")
 print(f"Próxima ejecución: {schedule.next_run()}")
